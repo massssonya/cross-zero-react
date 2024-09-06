@@ -1,0 +1,12 @@
+.header {
+    @apply absolute top-10 left-1/2 -translate-x-1/2 px-3 py-2 text-3xl font-bold shadow-2xl;
+}
+
+.container{
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col w-44;
+}
+
+
+.button{
+    @apply px-3 py-2 text-xl text-center rounded-lg hover:bg-indigo-300 hover:text-white transition-all;
+}

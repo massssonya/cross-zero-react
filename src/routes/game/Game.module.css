@@ -1,0 +1,19 @@
+.header{
+    @apply absolute left-0 px-2 w-full flex justify-end;
+}
+
+.right-text {
+    @apply flex flex-row items-center justify-center mr-8 sm:text-2xl text-xl font-bold 
+}
+
+/* .container {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 grid grid-cols-3 gap-2
+}
+
+.square{
+    @apply border-4 border-indigo-500 px-4 py-2
+}
+
+.square__button{
+    @apply text-3xl font-bold;
+} */
