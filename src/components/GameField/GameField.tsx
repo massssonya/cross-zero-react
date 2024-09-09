@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PlayerMoveContext, TMarker } from "../../hooks/usePlayerMoveContext";
 import { markers } from "../../constants/Markers";
 import { useGameField } from "../../hooks/useGameField";
@@ -8,8 +8,18 @@ interface IGameField {
 }
 
 export const GameField = ({ col }: IGameField) => {
-	const { squares, handleChangeSquare } = useGameField(col);
-
+	const [currentId, setCurrentId] = useState("");
+	const { squares, handleChangeSquare, checkWinner, numClicks, setNumClicks } =
+		useGameField(col);
+	const handleChangeClick = (id: string) => {
+		setNumClicks(numClicks + 1);
+		setCurrentId(id);
+	};
+	useEffect(() => {
+		if (numClicks > 4) {
+			checkWinner(currentId);
+		}
+	});
 	return (
 		<div
 			className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
@@ -22,6 +32,8 @@ export const GameField = ({ col }: IGameField) => {
 					id={square.id}
 					squareMarker={square.squareMarker}
 					handleChangeSquare={(id, marker) => handleChangeSquare(id, marker)}
+					handleChangeClick={handleChangeClick}
+
 				/>
 			))}
 		</div>
@@ -32,16 +44,26 @@ interface ISquare {
 	id: string;
 	squareMarker: TMarker;
 	handleChangeSquare: (id: string, marker: TMarker) => void;
+	handleChangeClick: (id: string) => void;
+	// checkWinner: (id: string) => void;
+	// numClicks: number;
+	// setNumClicks: (numClicks: number) => void;
 }
 
-const Square = ({ id, handleChangeSquare, squareMarker }: ISquare) => {
+const Square = ({
+	id,
+	handleChangeSquare,
+	squareMarker,
+	handleChangeClick
+}: ISquare) => {
 	const [disabled, setDisabled] = useState(false);
-	const { marker, handleChangeMarker } = useContext(PlayerMoveContext);
 
+	const { marker, handleChangeMarker } = useContext(PlayerMoveContext);
 	const handleClick = () => {
 		setDisabled(true);
 		handleChangeMarker();
 		handleChangeSquare(id, marker);
+		handleChangeClick(id);
 	};
 
 	return (
