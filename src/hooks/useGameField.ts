@@ -8,7 +8,10 @@ export const useGameField = (col: number) => {
 	const numValueInRow = col - numMarkers + 1;
 	let items: ISquareItem[] = [];
 	for (let i = 1; i <= col * col; i++) {
-		items = [...items, { id: `square_${i}`, squareMarker: "" }];
+		items = [
+			...items,
+			{ id: `square_${i}`, squareMarker: "", disabled: false }
+		];
 	}
 	const [squares, setSquares] = useState<ISquareItem[]>(items);
 	const [numClicks, setNumClicks] = useState(0);
@@ -18,43 +21,47 @@ export const useGameField = (col: number) => {
 		setSquares((prevSquares) => {
 			return prevSquares.map((square) => {
 				if (square.id === id) {
-					return { ...square, squareMarker };
+					return { ...square, squareMarker, disabled: true };
 				}
 				return square;
 			});
 		});
 	}
 
+	function handleAllDisabled() {
+		setSquares((prevSquares) => {
+			return prevSquares.map((square) => {
+				return { ...square, disabled: true };
+			});
+		});
+	}
+
 	function checkRow(option: TOption, marker: TMarker) {
-		if (
-			option.every(
-				(id) =>
-					squares.find((square) => square.id === id)?.squareMarker === marker
-			)
-		) {
-			return true;
-		}
-		return false;
+		return option.every(
+			(id) =>
+				squares.find((square) => square.id === id)?.squareMarker === marker
+		);
 	}
 
 	function checkWinner(id: string) {
-		// const square = squares.find((square) => square.id === id);
-		// if(square) {
-		// 	const marker = square.squareMarker;
+		const square = squares.find((square) => square.id === id)?.squareMarker;
+		if (square) {
+			const option = winOptions.find((option) => checkRow(option, square));
+			if (option) {
+				return option;
+			}
 
-		// }
-		console.log(squares);
-
-		// console.log(marker);
-		// if (!marker) return false;
-		// winOptions.forEach((option) => {
-		// 	if (option.includes(id)) {
-		// 		if (checkRow(option, marker)) {
-		// 			return true;
-		// 		}
-		// 	}
-		// });
+			return false;
+		}
 	}
 
-	return { squares, handleChangeSquare, checkWinner, numClicks, setNumClicks };
+	return {
+		squares,
+		numMarkers,
+		handleChangeSquare,
+		checkWinner,
+		numClicks,
+		setNumClicks,
+		handleAllDisabled
+	};
 };
